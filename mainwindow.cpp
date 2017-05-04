@@ -14,10 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 foreach (QStorageInfo storage, QStorageInfo::mountedVolumes())
 {
-        ShowDrives *wnd = new ShowDrives(this, storage.name());
+        ShowDrives *wnd = new ShowDrives(this, storage.device());
         QListWidgetItem *item = new QListWidgetItem();
         ui->listWidget->addItem(item);
-        item->setSizeHint(QSize(50,50));
+        item->setSizeHint(QSize(50,100));
         ui->listWidget->setItemWidget(item, wnd);
     }
 foreach (QStorageInfo storage, QStorageInfo::mountedVolumes())

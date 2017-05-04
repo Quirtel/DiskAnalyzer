@@ -10,9 +10,13 @@ ShowDrives::ShowDrives(QWidget *parent,QString num) :
     ui(new Ui::ShowDrives)
 {
     ui->setupUi(this);
-    ui->label->setText("Number" + num);
-}
+    ui->label->setText(num);
 
+    foreach (QStorageInfo storage, QStorageInfo::mountedVolumes())
+    {   ui->label1->setText("name: " + storage.name());
+        ui->label2->setText("fileSystemType: " + storage.fileSystemType());
+}
+}
 ShowDrives::~ShowDrives()
 {
     delete ui;
