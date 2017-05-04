@@ -14,7 +14,7 @@ ShowDrives::ShowDrives(QWidget *parent,QString num) :
 
     foreach (QStorageInfo storage, QStorageInfo::mountedVolumes())
     {   ui->label1->setText("name: " + storage.name());
-        ui->label2->setText("fileSystemType: " + storage.fileSystemType());
+        ui->label2->setText("fileSystemType:  " + storage.fileSystemType());
 }
 }
 ShowDrives::~ShowDrives()
