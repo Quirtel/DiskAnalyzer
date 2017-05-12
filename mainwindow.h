@@ -16,9 +16,13 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
+	void refreshVolumes();
+	void detectVolsAmount();
 
 private slots:
 	void on_pushButton_selectAll_clicked();
+
+	void on_pushButton_update_clicked();
 
 signals:
 	void checkAll();
