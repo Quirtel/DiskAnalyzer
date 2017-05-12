@@ -83,7 +83,9 @@ void MainWindow::refreshVolumes()
 
 void MainWindow::on_pushButton_selectAll_clicked()
 {
-	emit checkAll();
+	for (int i = 0; i < view_list.size(); i++){
+		delete view_list.at(i);
+	}
 }
 
 void MainWindow::on_pushButton_update_clicked()
