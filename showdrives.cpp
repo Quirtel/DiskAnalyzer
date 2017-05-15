@@ -21,6 +21,12 @@ ShowDrives::ShowDrives(QStorageInfo info, QWidget *parent) :
 		ui->label->setText(info.name()); // иначе прописываем имя
 		ui->label1->setText("Устройство: " + info.device()); // и отдельно указываем точку монтирования
 	}
+
+	if(info.isReadOnly())
+		ui->label_readWriteAcc->setText("Только чтение");
+	else
+		ui->label_readWriteAcc->setText("Чтение и запись");
+
 	ui->label2->setText("Файловая система:  " + info.fileSystemType());
 
 	double size_free = static_cast<double>(info.bytesFree());
@@ -41,9 +47,9 @@ ShowDrives::ShowDrives(QStorageInfo info, QWidget *parent) :
 	ui->label_sizeTotal->setText("Всего памяти: " + QString::number(size_total,'f',2) + " " + str_size_total);
 }
 
-int ShowDrives::convertToMegabytes(double size)
+double ShowDrives::convertToMegabytes(double size)
 {
-	return static_cast<int>(size / 1000 / 1000);
+	return static_cast<double>(size / 1000 / 1000);
 }
 
 QString ShowDrives::getUnitForMemory(double &size)
@@ -66,6 +72,11 @@ QString ShowDrives::getUnitForMemory(double &size)
 ShowDrives::~ShowDrives()
 {
 	delete ui;
+}
+
+void ShowDrives::check(bool c)
+{
+	ui->checkBox->setChecked(c);
 }
 
 void ShowDrives::on_checkBox_clicked()

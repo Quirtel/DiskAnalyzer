@@ -47,6 +47,8 @@ void MainWindow::detectVolsAmount()
 
 void MainWindow::refreshVolumes()
 {
+	overall_memory = 0.0;
+
 	for (int i = 0; i < view_list.size(); i++){
 		delete view_list.at(i);
 	}
@@ -57,6 +59,7 @@ void MainWindow::refreshVolumes()
 	{
 		ShowDrives *wnd = new ShowDrives(storage, this); // создаем виджет
 		view_list.push_back(wnd); // заносим его в список, чтобы контролировать
+		overall_memory += (storage.bytesTotal() - storage.bytesFree());
 
 		QListWidgetItem *item = new QListWidgetItem(); // создаем контейнер под запись
 		ui->listWidget->addItem(item);
@@ -65,6 +68,11 @@ void MainWindow::refreshVolumes()
 	}
 
 	detectVolsAmount();
+
+	ui->label_disksAmount->setText("Всего дисков: " + QString::number(QStorageInfo::mountedVolumes().size()));
+
+	QString unit = ShowDrives::getUnitForMemory(overall_memory);
+	ui->label_overall_memory->setText("Объем занятой памяти: " + QString::number(overall_memory, 'f', 2) + " " + unit);
 
 	foreach (QStorageInfo storage, QStorageInfo::mountedVolumes()) // для каждого элемента информации о диске
 	{
@@ -84,11 +92,18 @@ void MainWindow::refreshVolumes()
 void MainWindow::on_pushButton_selectAll_clicked()
 {
 	for (int i = 0; i < view_list.size(); i++){
-		delete view_list.at(i);
+		view_list.at(i)->check(true);
 	}
 }
 
 void MainWindow::on_pushButton_update_clicked()
 {
 	this->refreshVolumes();
+}
+
+void MainWindow::on_pushButton_deselectAll_clicked()
+{
+	for (int i = 0; i < view_list.size(); i++){
+		view_list.at(i)->check(false);
+	}
 }

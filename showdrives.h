@@ -15,8 +15,9 @@ class ShowDrives : public QWidget
 
 public:
 	explicit ShowDrives(QStorageInfo info, QWidget *parent = 0);
-	QString getUnitForMemory(double &size);
-	int convertToMegabytes(double size);
+	static QString getUnitForMemory(double &size);
+	static double convertToMegabytes(double size);
+	void check(bool c);
 
     ~ShowDrives();
 

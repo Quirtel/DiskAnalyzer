@@ -24,6 +24,8 @@ private slots:
 
 	void on_pushButton_update_clicked();
 
+	void on_pushButton_deselectAll_clicked();
+
 signals:
 	void checkAll();
 	void uncheckAll();
@@ -32,6 +34,7 @@ private:
 	Ui::MainWindow *ui;
 	QLabel *disks_amount;
 	QList <ShowDrives *> view_list;
+	double overall_memory; // объем памяти со всех носителей
 };
 
 #endif // MAINWINDOW_H
