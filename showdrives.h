@@ -17,7 +17,9 @@ public:
 	explicit ShowDrives(QStorageInfo info, QWidget *parent = 0);
 	static QString getUnitForMemory(double &size);
 	static double convertToMegabytes(double size);
+	QStorageInfo object;
 	void check(bool c);
+	bool isSelected() const;
 
     ~ShowDrives();
 

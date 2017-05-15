@@ -4,6 +4,7 @@
 #include <QStorageInfo>
 #include <QDebug>
 #include "showdrives.h"
+#include "processwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	disks_amount = new QLabel(this);
 	ui->statusBar->insertWidget(0, disks_amount, 200); // вставляем надпись в статус-бар
+	wnd = nullptr;
 
 	this->refreshVolumes();
 	this->detectVolsAmount();
@@ -105,5 +107,24 @@ void MainWindow::on_pushButton_deselectAll_clicked()
 {
 	for (int i = 0; i < view_list.size(); i++){
 		view_list.at(i)->check(false);
+	}
+}
+
+void MainWindow::on_pushButton_ok_clicked()
+{
+	QList<QStorageInfo> vols_list;
+	foreach (ShowDrives *obj, view_list) {
+		if (obj->isSelected())
+		{
+			vols_list.push_back(obj->object);
+		}
+	}
+	if (!vols_list.isEmpty())
+	{
+		if (wnd == nullptr)
+		{
+			wnd = new ProcessWindow(vols_list, this);
+			wnd->show();
+		}
 	}
 }

@@ -8,30 +8,30 @@
 #include <QStorageInfo>
 
 ShowDrives::ShowDrives(QStorageInfo info, QWidget *parent) :
-    QWidget(parent),
+    QWidget(parent), object(info),
     ui(new Ui::ShowDrives)
 {
 	ui->setupUi(this);
-	if (info.name() == "")
+	if (object.name() == "")
 	{
-		ui->label->setText(info.device()); // если у устройства нет имени, то прописываем точку монтирования
+		ui->label->setText(object.device()); // если у устройства нет имени, то прописываем точку монтирования
 	}
 	else
 	{
-		ui->label->setText(info.name()); // иначе прописываем имя
-		ui->label1->setText("Устройство: " + info.device()); // и отдельно указываем точку монтирования
+		ui->label->setText(object.name()); // иначе прописываем имя
+		ui->label1->setText("Устройство: " + object.device()); // и отдельно указываем точку монтирования
 	}
 
-	if(info.isReadOnly())
+	if(object.isReadOnly())
 		ui->label_readWriteAcc->setText("Только чтение");
 	else
 		ui->label_readWriteAcc->setText("Чтение и запись");
 
-	ui->label2->setText("Файловая система:  " + info.fileSystemType());
+	ui->label2->setText("Файловая система:  " + object.fileSystemType());
 
-	double size_free = static_cast<double>(info.bytesFree());
-	double size_used = static_cast<double>(info.bytesTotal() - info.bytesFree());
-	double size_total = static_cast<double>(info.bytesTotal());
+	double size_free = static_cast<double>(object.bytesFree());
+	double size_used = static_cast<double>(object.bytesTotal() - object.bytesFree());
+	double size_total = static_cast<double>(object.bytesTotal());
 
 	ui->progressBar->setMaximum(convertToMegabytes(size_total));
 	ui->progressBar->setValue(convertToMegabytes(size_used));
@@ -77,6 +77,15 @@ ShowDrives::~ShowDrives()
 void ShowDrives::check(bool c)
 {
 	ui->checkBox->setChecked(c);
+
+}
+
+bool ShowDrives::isSelected() const
+{
+	if (ui->checkBox->isChecked())
+		return true;
+	else
+		return false;
 }
 
 void ShowDrives::on_checkBox_clicked()
