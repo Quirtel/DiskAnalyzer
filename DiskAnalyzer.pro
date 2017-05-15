@@ -26,12 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     showdrives.cpp \
-    diskview.cpp
+    diskview.cpp \
+    processwindow.cpp
 
 HEADERS  += mainwindow.h \
     showdrives.h \
-    diskview.h
+    diskview.h \
+    processwindow.h
 
 FORMS    += mainwindow.ui \
     showdrives.ui \
-    diskview.ui
+    diskview.ui \
+    processwindow.ui
