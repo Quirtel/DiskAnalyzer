@@ -124,6 +124,11 @@ void MainWindow::on_pushButton_ok_clicked()
 		if (wnd == nullptr)
 		{
 			wnd = new ProcessWindow(vols_list, this);
+			connect(wnd, &ProcessWindow::destroyed, this, [&]() // подключение сигнала(если окно закрыто, то указатель становится NULL
+			{
+			    wnd = nullptr;
+			});
+
 			wnd->show();
 		}
 	}

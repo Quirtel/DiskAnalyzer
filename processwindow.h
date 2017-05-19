@@ -17,6 +17,9 @@ public:
 	~ProcessWindow();
 	void closeEvent(QCloseEvent *event);
 
+private slots:
+	void on_pushButton_cancel_clicked();
+
 private:
 	Ui::ProcessWindow *ui;
 	QList<QStorageInfo> vols_list;

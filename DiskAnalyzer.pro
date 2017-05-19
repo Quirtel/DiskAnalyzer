@@ -27,14 +27,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     showdrives.cpp \
     diskview.cpp \
-    processwindow.cpp
+    processwindow.cpp \
+    filescanprocessor.cpp
 
 HEADERS  += mainwindow.h \
     showdrives.h \
     diskview.h \
-    processwindow.h
+    processwindow.h \
+    filescanprocessor.h
 
 FORMS    += mainwindow.ui \
     showdrives.ui \
     diskview.ui \
-    processwindow.ui
+    processwindow.ui \
+    filescanprocessor.ui
