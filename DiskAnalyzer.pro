@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = DiskAnalyzer
 TEMPLATE = app
-
+CONFIG += c++11
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -28,16 +28,19 @@ SOURCES += main.cpp\
     showdrives.cpp \
     diskview.cpp \
     processwindow.cpp \
-    filescanprocessor.cpp
+    filescanprocessor.cpp \
+    taskview.cpp
 
 HEADERS  += mainwindow.h \
     showdrives.h \
     diskview.h \
     processwindow.h \
-    filescanprocessor.h
+    filescanprocessor.h \
+    taskview.h
 
 FORMS    += mainwindow.ui \
     showdrives.ui \
     diskview.ui \
     processwindow.ui \
-    filescanprocessor.ui
+    filescanprocessor.ui \
+    taskview.ui

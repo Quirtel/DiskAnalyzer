@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->refreshVolumes();
 	this->detectVolsAmount();
+
 }
 
 MainWindow::~MainWindow()
