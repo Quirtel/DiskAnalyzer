@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QLabel>
 #include "showdrives.h"
-#include "processwindow.h"
 
 namespace Ui {
 	class MainWindow;
@@ -38,7 +37,6 @@ private:
 	QLabel *disks_amount;
 	QList <ShowDrives *> view_list;
 	double overall_memory; // объем памяти со всех носителей
-	ProcessWindow *wnd;
 };
 
 #endif // MAINWINDOW_H
