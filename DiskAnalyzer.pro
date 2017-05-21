@@ -22,25 +22,30 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+DESTDIR = bin #Target file directory
+OBJECTS_DIR = build #Intermediate object files directory
+MOC_DIR = moc #Intermediate moc files directory
+UI_DIR = ui
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    showdrives.cpp \
-    diskview.cpp \
-    processwindow.cpp \
-    filescanprocessor.cpp \
-    taskview.cpp
 
-HEADERS  += mainwindow.h \
-    showdrives.h \
-    diskview.h \
-    processwindow.h \
-    filescanprocessor.h \
-    taskview.h
+SOURCES += src/main.cpp \
+        src/mainwindow.cpp \
+    src/showdrives.cpp \
+    src/diskview.cpp \
+    src/processwindow.cpp \
+    src/filescanprocessor.cpp \
+    src/taskview.cpp
 
-FORMS    += mainwindow.ui \
-    showdrives.ui \
-    diskview.ui \
-    processwindow.ui \
-    filescanprocessor.ui \
-    taskview.ui
+HEADERS  += src/mainwindow.h \
+    src/showdrives.h \
+    src/diskview.h \
+    src/processwindow.h \
+    src/filescanprocessor.h \
+    src/taskview.h
+
+FORMS    += forms/mainwindow.ui \
+    forms/showdrives.ui \
+    forms/diskview.ui \
+    forms/processwindow.ui \
+    forms/filescanprocessor.ui \
+    forms/taskview.ui
