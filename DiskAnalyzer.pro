@@ -33,13 +33,17 @@ SOURCES += src/main.cpp \
     src/showdrives.cpp \
     src/diskview.cpp \
     src/filescanprocessor.cpp \
-    src/taskview.cpp
+    src/taskview.cpp \
+    src/filescan/filescan.cpp \
+    src/filescan/dirinfo.cpp
 
 HEADERS  += src/mainwindow.h \
     src/showdrives.h \
     src/diskview.h \
     src/filescanprocessor.h \
-    src/taskview.h
+    src/taskview.h \
+    src/filescan/filescan.h \
+    src/filescan/dirinfo.h
 
 FORMS    += forms/mainwindow.ui \
     forms/showdrives.ui \
