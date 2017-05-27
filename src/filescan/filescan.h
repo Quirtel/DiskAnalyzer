@@ -3,6 +3,7 @@
 #include <QString>
 #include <QObject>
 #include <QVector>
+#include <QMutex>
 #include "dirinfo.h"
 #include <QMap>
 
