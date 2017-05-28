@@ -19,16 +19,20 @@ public:
 	explicit taskView(QStorageInfo storage, QWidget *parent = 0);
 	void execute();
     void mouseDoubleClickEvent(QMouseEvent *);
+	QString device_name() const;
 
 	~taskView();
 
 signals:
+	void deleted();
 
 public slots:
 	void stopProcess();
+	void updateInfo(QString);
 
 private slots:
 	void on_pushButton_cancel_clicked();
+
 
 private:
 	QStorageInfo storage_info;
@@ -37,6 +41,7 @@ private:
 	quint64 bytesRead; // сколько байт было всего прочитано
 	QThread *thr;
 	Filescan *scan_adapter; //объект, который будет производить сканирование
+	bool isReady;
 
 	Ui::taskView *ui;
 };

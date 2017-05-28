@@ -16,7 +16,8 @@ class FileScanProcessor : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit FileScanProcessor(QList<QStorageInfo> list,QWidget *parent = 0);
+	explicit FileScanProcessor(QWidget *parent = 0);
+	void addTask(QStorageInfo info);
 	~FileScanProcessor();
 
 private:

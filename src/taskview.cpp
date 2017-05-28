@@ -11,6 +11,7 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 {
 	ui->setupUi(this);
 	bytesRead = 0;
+	isReady = false;
 
 	if (storage_info.name() == "")
 	{
@@ -24,19 +25,12 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 	ui->progressBar->setMaximum(convertFromBytes(storage_info.bytesTotal() - storage_info.bytesFree()));
 
 	scan_adapter = new Filescan(storage.rootPath());
-	connect(scan_adapter, &Filescan::currentFileScan, this, [=](QFileInfo a){
-		if (!a.isDir())
-		{
-			bytesRead += a.size();
-			ui->label_readBytes->setText("Прочитано: " +
-			                             QString::number(convertFromBytes(bytesRead)) + '/' +
-			                             QString::number(convertFromBytes(storage_info.bytesAvailable())));
-		}
-	});
+	connect(scan_adapter, SIGNAL(currentFileScan(QString)), this, SLOT(updateInfo(QString)));
+
 	thr = new QThread(this);
 	connect(thr, &QThread::started, scan_adapter, &Filescan::startWork);
-	connect(thr, &QThread::finished, thr, &QThread::deleteLater);
 	scan_adapter->moveToThread(thr);
+
 }
 
 taskView::~taskView()
@@ -45,12 +39,21 @@ taskView::~taskView()
 	thr->terminate();
 	thr->wait();
 
+	thr->deleteLater();
 	scan_adapter->deleteLater();
 	delete ui;
 }
 
-void taskView::mouseDoubleClickEvent(QMouseEvent *) {
+void taskView::updateInfo(QString info)
+{
+	ui->label_readBytes->setText(info);
+}
 
+void taskView::mouseDoubleClickEvent(QMouseEvent *) {
+	if(isReady)
+	{
+
+	}
 }
 
 QString taskView::getUnit(quint64 &value)
@@ -82,10 +85,17 @@ double taskView::convertFromBytes(quint64 value)
 
 void taskView::on_pushButton_cancel_clicked()
 {
-	scan_adapter->sendStop();
+	delete this;
 }
 
 void taskView::stopProcess()
 {
 	delete this;
+}
+
+QString taskView::device_name() const
+{
+	if (storage_info.name() == "")
+		return storage_info.device();
+	else return storage_info.name();
 }

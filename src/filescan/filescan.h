@@ -28,7 +28,7 @@ public slots:
 	void sendStop();
 
 signals:
-	void currentFileScan(QFileInfo);
+	void currentFileScan(QString);
 
 private:
 	QMutex mutex;

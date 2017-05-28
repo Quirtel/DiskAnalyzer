@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	disks_amount = new QLabel(this);
 	ui->statusBar->insertWidget(0, disks_amount, 200); // вставляем надпись в статус-бар
 
+	scan_prc = new FileScanProcessor(this);
+
 	this->refreshVolumes();
 	this->detectVolsAmount();
 
@@ -112,14 +114,11 @@ void MainWindow::on_pushButton_deselectAll_clicked()
 
 void MainWindow::on_pushButton_ok_clicked()
 {
-	QList<QStorageInfo> vols_list;
+	scan_prc->show();
 	foreach (ShowDrives *obj, view_list) {
 		if (obj->isSelected())
 		{
-			vols_list.push_back(obj->object);
+			scan_prc->addTask(obj->object);
 		}
 	}
-
-	FileScanProcessor *scan_prc = new FileScanProcessor(vols_list, this);
-	scan_prc->show();
 }

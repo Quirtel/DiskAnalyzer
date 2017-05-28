@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include "showdrives.h"
+#include "filescanprocessor.h"
 
 namespace Ui {
 	class MainWindow;
@@ -37,6 +38,7 @@ private:
 	QLabel *disks_amount;
 	QList <ShowDrives *> view_list;
 	double overall_memory; // объем памяти со всех носителей
+	FileScanProcessor *scan_prc; //окно для показа текущих задач сканирования
 };
 
 #endif // MAINWINDOW_H
