@@ -12,6 +12,7 @@ Filescan::Filescan(const QString &entryDir) : dir_address(entryDir)
 {
 	root = new DirInfo(dir_address);
 	dirs_map.insert(dir_address, root);
+	signal_stop = false;
 }
 
 Filescan::~Filescan()
@@ -19,16 +20,17 @@ Filescan::~Filescan()
 	foreach (DirInfo *info, dirs_map.values()) {
 		delete info;
 	}
-	delete this;
+	delete root;
 }
 
 void Filescan::startWork()
 {
-	mutex.lock();
 	startAnalyse();
-	mutex.unlock();
+}
 
-	this->thread()->quit();
+void Filescan::sendStop()
+{
+	signal_stop = true; //ставим прерывания процесса
 }
 
 void Filescan::startAnalyse()
@@ -40,6 +42,8 @@ quint64 Filescan::getFilesOfDir_recursion(const QString &path)
 {
 	QFileInfo str_info(path);
 	quint64 sizex = 0;
+	if (signal_stop) return 0;
+
 	if (str_info.isDir())
 	{
 		QDir dir(path);
@@ -61,7 +65,9 @@ quint64 Filescan::getFilesOfDir_recursion(const QString &path)
 			}
 			else
 			{
+				all_files.append(fileInfo);
 				sizex += fileInfo.size();
+				emit currentFileScan(fileInfo);
 			}
 		}
 	}

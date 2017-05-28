@@ -4,6 +4,7 @@
 #include <QStorageInfo>
 #include <QDebug>
 #include "showdrives.h"
+#include "filescanprocessor.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -118,4 +119,7 @@ void MainWindow::on_pushButton_ok_clicked()
 			vols_list.push_back(obj->object);
 		}
 	}
+
+	FileScanProcessor *scan_prc = new FileScanProcessor(vols_list, this);
+	scan_prc->show();
 }

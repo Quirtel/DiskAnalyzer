@@ -77,7 +77,6 @@ ShowDrives::~ShowDrives()
 void ShowDrives::check(bool c)
 {
 	ui->checkBox->setChecked(c);
-
 }
 
 bool ShowDrives::isSelected() const

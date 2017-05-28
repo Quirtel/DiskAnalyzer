@@ -6,6 +6,7 @@
 #include <QMutex>
 #include "dirinfo.h"
 #include <QMap>
+#include <QFileInfo>
 
 class Filescan : public QObject
 {
@@ -18,14 +19,16 @@ public:
 	DirInfo *root;
 	void startAnalyse();
 	QMap <QString, DirInfo *> dirs_map;
+	bool signal_stop; // переменная-маркер для прерывания
 
 	~Filescan();
 
 public slots:
 	void startWork();
+	void sendStop();
 
 signals:
-	void sendStop();
+	void currentFileScan(QFileInfo);
 
 private:
 	QMutex mutex;
