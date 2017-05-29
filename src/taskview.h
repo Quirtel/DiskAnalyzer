@@ -29,10 +29,10 @@ signals:
 public slots:
 	void stopProcess();
 	void updateInfo(QString);
+    void workFinished();
 
 private slots:
 	void on_pushButton_cancel_clicked();
-
 
 private:
 	QStorageInfo storage_info;

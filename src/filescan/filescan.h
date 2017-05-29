@@ -28,6 +28,7 @@ public slots:
 	void sendStop();
 
 signals:
+    void bytesRead(quint64);
 	void currentFileScan(QString);
 
 private:

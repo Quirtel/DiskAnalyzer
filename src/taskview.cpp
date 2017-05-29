@@ -11,7 +11,7 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
     ui(new Ui::taskView)
 {
 	ui->setupUi(this);
-	bytesRead = 0;
+    bytesRead = 0;
 	isReady = false;
 
 	if (storage_info.name() == "")
@@ -27,6 +27,11 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 
 	scan_adapter = new Filescan(storage.rootPath());
 	connect(scan_adapter, SIGNAL(currentFileScan(QString)), this, SLOT(updateInfo(QString)));
+    connect(scan_adapter, &Filescan::bytesRead, this, [&](quint64 b)
+        {
+            bytesRead += b;
+            ui->progressBar->setValue(convertFromBytes(bytesRead));
+        });
 
 	thr = new QThread(this);
 	connect(thr, &QThread::started, scan_adapter, &Filescan::startWork);
@@ -79,6 +84,13 @@ void taskView::execute()
 	thr->start();
 }
 
+void taskView::workFinished()
+{
+    isReady = true;
+    ui->progressBar->setValue(ui->progressBar->maximum());
+    ui->label_readBytes->setText("Сканирование завершено");
+}
+
 double taskView::convertFromBytes(quint64 value)
 {
 	return static_cast<double>(value / 1000 / 1000);
@@ -87,19 +99,19 @@ double taskView::convertFromBytes(quint64 value)
 void taskView::on_pushButton_cancel_clicked()
 {
     QMessageBox msgBox;
-                   msgBox.setText("Вы действительно хотите отменить сканирование?");
-                   msgBox.setIcon(QMessageBox::Question);
-                  QPushButton *Yes = msgBox.addButton(tr("Да"), QMessageBox::ActionRole);
-                  QPushButton *No = msgBox.addButton(tr("Нет"), QMessageBox::ActionRole);
-                  msgBox.exec();
-                  if(msgBox.clickedButton()== Yes)
-                  {
-                      delete this;
-                  }
-                  else if (msgBox.clickedButton()== No)
-                  {
-                      return;
-                  }
+    msgBox.setText("Вы действительно хотите отменить сканирование?");
+    msgBox.setIcon(QMessageBox::Question);
+    QPushButton *Yes = msgBox.addButton(tr("Да"), QMessageBox::ActionRole);
+    QPushButton *No = msgBox.addButton(tr("Нет"), QMessageBox::ActionRole);
+    msgBox.exec();
+    if(msgBox.clickedButton()== Yes)
+    {
+        delete this;
+    }
+    else if (msgBox.clickedButton()== No)
+    {
+        return;
+    }
 }
 
 void taskView::stopProcess()

@@ -68,6 +68,7 @@ quint64 Filescan::getFilesOfDir_recursion(const QString &path)
 				all_files.append(fileInfo);
 				sizex += fileInfo.size();
 				emit currentFileScan(fileInfo.absoluteFilePath());
+                emit bytesRead(fileInfo.size());
 			}
 		}
 	}
