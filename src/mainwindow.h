@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QStorageInfo>
 #include "showdrives.h"
 #include "filescanprocessor.h"
 
@@ -39,6 +40,7 @@ private:
 	QList <ShowDrives *> view_list;
 	double overall_memory; // объем памяти со всех носителей
 	FileScanProcessor *scan_prc; //окно для показа текущих задач сканирования
+	QList<QStorageInfo> drives_list;
 };
 
 #endif // MAINWINDOW_H

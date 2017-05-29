@@ -22,6 +22,8 @@ public:
 private slots:
 	void on_tableWidget_files_cellDoubleClicked(int row, int column);
 
+	void addItemToListOfFiles(int index);
+
 private:
 	Ui::DiskView *ui;
 	Filescan *scanAdapter;
