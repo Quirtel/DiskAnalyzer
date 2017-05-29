@@ -67,7 +67,7 @@ void MainWindow::refreshVolumes()
 
 		QListWidgetItem *item = new QListWidgetItem(); // создаем контейнер под запись
 		ui->listWidget->addItem(item);
-		item->setSizeHint(QSize(50,100));
+		item->setSizeHint(QSize(50,120));
 		ui->listWidget->setItemWidget(item, wnd); // присваиваем виджет контейнеру
 	}
 

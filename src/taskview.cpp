@@ -13,6 +13,7 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 	ui->setupUi(this);
     bytesRead = 0;
 	isReady = false;
+	view = nullptr;
 
 	if (storage_info.name() == "")
 	{
@@ -27,23 +28,29 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 
 	scan_adapter = new Filescan(storage.rootPath());
 	connect(scan_adapter, SIGNAL(currentFileScan(QString)), this, SLOT(updateInfo(QString)));
-    connect(scan_adapter, &Filescan::bytesRead, this, [&](quint64 b)
-        {
-            bytesRead += b;
-            ui->progressBar->setValue(convertFromBytes(bytesRead));
-        });
+
+	connect(scan_adapter, &Filescan::bytesRead, this, [&](quint64 b)
+	{
+		bytesRead += b;
+		ui->progressBar->setValue(convertFromBytes(bytesRead));
+	});
 
 	thr = new QThread(this);
 	connect(thr, &QThread::started, scan_adapter, &Filescan::startWork);
-	scan_adapter->moveToThread(thr);
+	connect(thr, &QThread::finished, this, &taskView::workFinished);
 
+
+	scan_adapter->moveToThread(thr);
 }
 
 taskView::~taskView()
 {
 	scan_adapter->sendStop();
-	thr->terminate();
-	thr->wait();
+	if (thr->isRunning())
+	{
+		thr->terminate();
+		thr->wait();
+	}
 
 	thr->deleteLater();
 	scan_adapter->deleteLater();
@@ -58,11 +65,19 @@ void taskView::updateInfo(QString info)
 void taskView::mouseDoubleClickEvent(QMouseEvent *) {
 	if(isReady)
 	{
-
+		if (view == nullptr)
+		{
+			view = new DiskView(scan_adapter,0);
+			connect(view, &DiskView::destroyed, this, [=]()
+			{
+				view = nullptr;
+			});
+			view->show();
+		}
 	}
 }
 
-QString taskView::getUnit(quint64 &value)
+QString taskView::getUnit(quint64 value)
 {
 	QStringList list;
 	list << "KB" << "MB" << "GB";
@@ -86,14 +101,19 @@ void taskView::execute()
 
 void taskView::workFinished()
 {
-    isReady = true;
-    ui->progressBar->setValue(ui->progressBar->maximum());
-    ui->label_readBytes->setText("Сканирование завершено");
+	isReady = true;
+	ui->progressBar->setValue(ui->progressBar->maximum());
+	ui->label_readBytes->setText("Сканирование завершено");
 }
 
 double taskView::convertFromBytes(quint64 value)
 {
-	return static_cast<double>(value / 1000 / 1000);
+	double buf = value;
+	while(buf >= 1000.0)
+	{
+		buf /= 1000.0;
+	}
+	return buf;
 }
 
 void taskView::on_pushButton_cancel_clicked()

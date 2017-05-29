@@ -16,10 +16,11 @@ public:
 	unsigned long long size;
 	quint64 getFilesOfDir_recursion(const QString &path);
 	QString dir_address;
-	DirInfo *root;
+	DirInfo *root; //корневая папка
 	void startAnalyse();
 	QMap <QString, DirInfo *> dirs_map;
 	bool signal_stop; // переменная-маркер для прерывания
+	QVector <QFileInfo> getListOfFiles() const;
 
 	~Filescan();
 
@@ -28,8 +29,8 @@ public slots:
 	void sendStop();
 
 signals:
-    void bytesRead(quint64);
 	void currentFileScan(QString);
+	void bytesRead(quint64);
 
 private:
 	QMutex mutex;

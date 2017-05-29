@@ -36,6 +36,11 @@ void Filescan::sendStop()
 void Filescan::startAnalyse()
 {
 	root->setDirectorySize(getFilesOfDir_recursion(dir_address));
+	std::sort(all_files.begin(), all_files.end(), [&](QFileInfo a1, QFileInfo a2)
+	{
+		return a1.size() > a2.size();
+	});
+	this->thread()->quit();
 }
 
 quint64 Filescan::getFilesOfDir_recursion(const QString &path)
@@ -68,14 +73,17 @@ quint64 Filescan::getFilesOfDir_recursion(const QString &path)
 				all_files.append(fileInfo);
 				sizex += fileInfo.size();
 				emit currentFileScan(fileInfo.absoluteFilePath());
-                emit bytesRead(fileInfo.size());
+				emit bytesRead(fileInfo.size());
 			}
 		}
 	}
 	return sizex;
 }
 
-
+QVector <QFileInfo> Filescan::getListOfFiles() const
+{
+	return this->all_files;
+}
 
 
 
