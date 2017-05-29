@@ -5,6 +5,7 @@
 #include <QStorageInfo>
 #include <QThread>
 #include "showdrives.h"
+#include<QMessageBox>
 
 taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), storage_info(storage),
     ui(new Ui::taskView)
@@ -85,7 +86,20 @@ double taskView::convertFromBytes(quint64 value)
 
 void taskView::on_pushButton_cancel_clicked()
 {
-	delete this;
+    QMessageBox msgBox;
+                   msgBox.setText("Вы действительно хотите отменить сканирование?");
+                   msgBox.setIcon(QMessageBox::Question);
+                  QPushButton *Yes = msgBox.addButton(tr("Да"), QMessageBox::ActionRole);
+                  QPushButton *No = msgBox.addButton(tr("Нет"), QMessageBox::ActionRole);
+                  msgBox.exec();
+                  if(msgBox.clickedButton()== Yes)
+                  {
+                      delete this;
+                  }
+                  else if (msgBox.clickedButton()== No)
+                  {
+                      return;
+                  }
 }
 
 void taskView::stopProcess()
