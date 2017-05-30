@@ -11,6 +11,7 @@
 #include <QStorageInfo>
 #include <QScrollBar>
 #include <QDebug>
+#include <QMessageBox>
 #include "taskview.h"
 
 DiskView::DiskView(QStorageInfo info,Filescan *scan_res, QWidget *parent) :
@@ -227,13 +228,25 @@ void DiskView::addItemToListOfFolders(int index) // а эта функция п�
 
 void DiskView::on_tableWidget_dirs_cellDoubleClicked(int row, int column)
 {
-	foldersListInit(ui->tableWidget_dirs->item(row, 0)->whatsThis());
+    QDir dir(ui->tableWidget_dirs->item(row, 0)->whatsThis());
+    dir.setFilter(QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot | QDir::Hidden);
+    QList<QFileInfo> list_next = dir.entryInfoList();
+    if (!list_next.isEmpty())
+    {
+        foldersListInit(ui->tableWidget_dirs->item(row, 0)->whatsThis());
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setText("Эта папка не содержит поддиректорий");
+        msgBox.exec();
+    }
 }
 
 void DiskView::on_pushButton_levelUp_clicked()
 {
 	QDir dir(current_directory);
 	dir.cdUp();
-
 	foldersListInit(dir.absolutePath());
 }
