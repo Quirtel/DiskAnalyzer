@@ -85,7 +85,10 @@ QVector <QFileInfo> Filescan::getListOfFiles() const
 	return this->all_files;
 }
 
-
+QMap <QString, DirInfo *> Filescan::getDirsMap() const
+{
+	return this->dirs_map;
+}
 
 
 

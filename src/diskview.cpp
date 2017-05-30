@@ -120,13 +120,13 @@ void DiskView::foldersListInit(const QString &entry_directory)
 				ui->tableWidget_dirs->setRowCount(ui->tableWidget_dirs->rowCount() + 1);
 
 				QTableWidgetItem *item_dirname = new QTableWidgetItem();
-				item_dirname->setText(list_of_dirs.at(i).absoluteFilePath());
+				item_dirname->setText(list_of_dirs.at(i).fileName());
 				item_dirname->setWhatsThis(list_of_dirs.at(i).absoluteFilePath());
 
 				QTableWidgetItem *item_size = new QTableWidgetItem();
 				item_size->setData(Qt::DisplayRole,QString::number(
-				                       taskView::convertFromBytes(scanAdapter->dirs_map.value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()),'f',2)
-				                       + ' ' + taskView::getUnit(scanAdapter->dirs_map.value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()));
+				                       taskView::convertFromBytes(scanAdapter->getDirsMap().value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()),'f',2)
+				                       + ' ' + taskView::getUnit(scanAdapter->getDirsMap().value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()));
 
 
 				ui->tableWidget_dirs->setItem(i, 0, item_dirname);
@@ -206,13 +206,13 @@ void DiskView::addItemToListOfFolders(int index) // а эта функция п�
 			if (maximum_item_index + i + 1 < list_of_dirs.size() && list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath() != "")
 			{
 				QTableWidgetItem *item_dirname = new QTableWidgetItem();
-				item_dirname->setText(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath());
+				item_dirname->setText(list_of_dirs.at(maximum_item_index + i + 1).fileName());
 				item_dirname->setWhatsThis(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath());
 
 				QTableWidgetItem *item_size = new QTableWidgetItem();
 				item_size->setData(Qt::DisplayRole,QString::number(
-				                       taskView::convertFromBytes(scanAdapter->dirs_map.value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()),'f',2)
-				                       + ' ' + taskView::getUnit(scanAdapter->dirs_map.value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()));
+				                       taskView::convertFromBytes(scanAdapter->getDirsMap().value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()),'f',2)
+				                       + ' ' + taskView::getUnit(scanAdapter->getDirsMap().value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()));
 
 				ui->tableWidget_dirs->setItem(maximum_item_index + i + 1, 0, item_dirname);
 				ui->tableWidget_dirs->setItem(maximum_item_index + i + 1, 1, item_size);
@@ -227,7 +227,7 @@ void DiskView::addItemToListOfFolders(int index) // а эта функция п�
 
 void DiskView::on_tableWidget_dirs_cellDoubleClicked(int row, int column)
 {
-	foldersListInit(ui->tableWidget_dirs->item(row, 0)->text());
+	foldersListInit(ui->tableWidget_dirs->item(row, 0)->whatsThis());
 }
 
 void DiskView::on_pushButton_levelUp_clicked()

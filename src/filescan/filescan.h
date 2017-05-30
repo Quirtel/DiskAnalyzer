@@ -18,7 +18,7 @@ public:
 	QString dir_address;
 	DirInfo *root; //корневая папка
 	void startAnalyse();
-	QMap <QString, DirInfo *> dirs_map;
+	QMap <QString, DirInfo *> getDirsMap() const;
 	bool signal_stop; // переменная-маркер для прерывания
 	QVector <QFileInfo> getListOfFiles() const;
 
@@ -35,6 +35,7 @@ signals:
 private:
 	QMutex mutex;
 	QVector <QFileInfo> all_files;
+	QMap <QString, DirInfo *> dirs_map;
 };
 
 #endif // FILESCAN_H
