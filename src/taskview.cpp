@@ -32,7 +32,7 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 	connect(scan_adapter, &Filescan::bytesRead, this, [&](quint64 b)
 	{
 		bytesRead += b;
-		ui->progressBar->setValue(convertFromBytes(bytesRead));
+		ui->progressBar->setValue(static_cast<int>(convertFromBytes(bytesRead)));
 	});
 
 	thr = new QThread(this);
@@ -67,7 +67,7 @@ void taskView::mouseDoubleClickEvent(QMouseEvent *) {
 	{
 		if (view == nullptr)
 		{
-			view = new DiskView(scan_adapter,0);
+			view = new DiskView(storage_info,scan_adapter,0);
 			connect(view, &DiskView::destroyed, this, [=]()
 			{
 				view = nullptr;
