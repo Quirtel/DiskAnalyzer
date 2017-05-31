@@ -7,6 +7,9 @@
 #include <QVector>
 #include <QCloseEvent>
 #include <QStorageInfo>
+#include <QPieSeries>
+#include <QVBoxLayout>
+#include <QChartView>
 
 namespace Ui {
 	class DiskView;
@@ -31,6 +34,8 @@ private slots:
 
 	void on_pushButton_levelUp_clicked();
 
+    void on_tableWidget_files_cellClicked(int row, int column);
+
 private:
 	Ui::DiskView *ui;
 	Filescan *scanAdapter;
@@ -41,6 +46,14 @@ private:
 	QStorageInfo disk_info;
 	QString current_directory;
 	QList<QFileInfo> list_of_dirs;
+    QStorageInfo storage;
+    QFileInfo file;
+    QtCharts::QPieSeries *series;
+    QtCharts::QChartView *chartView;
+    QVBoxLayout *vbox;
+    QtCharts::QPieSlice *slice;
+
+
 };
 
 #endif // DISKVIEW_H

@@ -12,6 +12,8 @@
 #include <QScrollBar>
 #include <QDebug>
 #include <QMessageBox>
+#include <QGroupBox>
+#include <QtCharts>
 #include "taskview.h"
 
 DiskView::DiskView(QStorageInfo info,Filescan *scan_res, QWidget *parent) :
@@ -22,8 +24,12 @@ DiskView::DiskView(QStorageInfo info,Filescan *scan_res, QWidget *parent) :
 	filesListInit();
 	foldersListInit(disk_info.rootPath());
 
+    series = nullptr;
+    chartView = nullptr;
+    vbox = nullptr;
 
 }
+
 
 void DiskView::closeEvent(QCloseEvent *event)
 {
@@ -47,7 +53,8 @@ void DiskView::on_tableWidget_files_cellDoubleClicked(int row, int column)
 
 void DiskView::filesListInit() // добавление списка файлов в таблицу
 {
-	ui->tableWidget_files->setColumnCount(2);
+
+    ui->tableWidget_files->setColumnCount(2);
 	ui->tableWidget_files->setHorizontalHeaderItem(0, new QTableWidgetItem("Название")); // добавляем столбец
 	ui->tableWidget_files->setHorizontalHeaderItem(1, new QTableWidgetItem("Размер")); // и здесь тоже
 
@@ -249,4 +256,49 @@ void DiskView::on_pushButton_levelUp_clicked()
 	QDir dir(current_directory);
 	dir.cdUp();
 	foldersListInit(dir.absolutePath());
+}
+
+void DiskView::on_tableWidget_files_cellClicked(int row, int column)
+{
+   QFileInfo file(ui->tableWidget_files->item(row,0)->whatsThis());
+   QStorageInfo storage = QStorageInfo::root();
+
+   if (vbox != nullptr)
+   {
+   delete vbox;
+   vbox = nullptr;
+   }
+
+   if (chartView != nullptr)
+   {
+   delete chartView;
+   chartView = nullptr;
+   }
+
+   if (series != nullptr)
+   {
+   delete series;
+   series = nullptr;
+   }
+
+
+
+   QT_CHARTS_USE_NAMESPACE
+   series = new QPieSeries();
+   slice = series->append(file.fileName(), ((storage.bytesTotal()-storage.bytesFree()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
+   slice->setExploded();
+   slice->setLabelVisible();
+   series->append("usage", ((storage.bytesTotal()-storage.bytesFree()-file.size())/1000000));
+   series->append("free",((storage.bytesTotal()-file.size()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
+
+   chartView = new QChartView();
+   chartView -> setRenderHint(QPainter::Antialiasing);
+   chartView->chart()->addSeries(series);
+   chartView->chart()->legend()->setAlignment(Qt::AlignBottom);
+   chartView->chart()->legend()->setFont(QFont("Arial",10));
+
+   vbox = new QVBoxLayout;
+   vbox->addWidget(chartView);
+   ui->groupBox_inFolder->setLayout(vbox);
+
 }
