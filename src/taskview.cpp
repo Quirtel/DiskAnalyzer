@@ -104,6 +104,7 @@ void taskView::workFinished()
 	isReady = true;
 	ui->progressBar->setValue(ui->progressBar->maximum());
 	ui->label_readBytes->setText("Сканирование завершено");
+    ui->pushButton_cancel->setVisible(false);
 }
 
 double taskView::convertFromBytes(quint64 value)
