@@ -11,8 +11,9 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
     ui(new Ui::taskView)
 {
 	ui->setupUi(this);
-    bytesRead = 0;
+	bytesRead = 0;
 	isReady = false;
+	errored = false;
 	view = nullptr;
 
 	if (storage_info.name() == "")
@@ -36,6 +37,12 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 	});
 
 	thr = new QThread(this);
+	connect(scan_adapter, &Filescan::errorOccured, this, [=]()
+	{
+		errored = true;
+		workFailed();
+	});
+
 	connect(thr, &QThread::started, scan_adapter, &Filescan::startWork);
 	connect(thr, &QThread::finished, this, &taskView::workFinished);
 
@@ -101,10 +108,25 @@ void taskView::execute()
 
 void taskView::workFinished()
 {
-	isReady = true;
-	ui->progressBar->setValue(ui->progressBar->maximum());
-	ui->label_readBytes->setText("Сканирование завершено");
-    ui->pushButton_cancel->setVisible(false);
+	if (!errored)
+	{
+		isReady = true; //завершен ли процесс
+		ui->progressBar->setValue(ui->progressBar->maximum());
+		ui->label_readBytes->setText("Сканирование завершено");
+		ui->pushButton_cancel->setVisible(false);
+	}
+}
+
+void taskView::workFailed()
+{
+	isReady = false;
+	if (errored)
+	{
+		ui->progressBar->setValue(0);
+		ui->label_readBytes->setText("Ошибка сканирования");
+		ui->pushButton_cancel->setText("Закрыть");
+		ui->pushButton_cancel->setVisible(true);
+	}
 }
 
 double taskView::convertFromBytes(quint64 value)
@@ -119,20 +141,27 @@ double taskView::convertFromBytes(quint64 value)
 
 void taskView::on_pushButton_cancel_clicked()
 {
-    QMessageBox msgBox;
-    msgBox.setText("Вы действительно хотите отменить сканирование?");
-    msgBox.setIcon(QMessageBox::Question);
-    QPushButton *Yes = msgBox.addButton(tr("Да"), QMessageBox::ActionRole);
-    QPushButton *No = msgBox.addButton(tr("Нет"), QMessageBox::ActionRole);
-    msgBox.exec();
-    if(msgBox.clickedButton()== Yes)
-    {
-        delete this;
-    }
-    else if (msgBox.clickedButton()== No)
-    {
-        return;
-    }
+	if (errored == false)
+	{
+		QMessageBox msgBox;
+		msgBox.setText("Вы действительно хотите отменить сканирование?");
+		msgBox.setIcon(QMessageBox::Question);
+		QPushButton *Yes = msgBox.addButton(tr("Да"), QMessageBox::ActionRole);
+		QPushButton *No = msgBox.addButton(tr("Нет"), QMessageBox::ActionRole);
+		msgBox.exec();
+		if(msgBox.clickedButton() == Yes)
+		{
+			delete this;
+		}
+		else if (msgBox.clickedButton() == No)
+		{
+			return;
+		}
+	}
+	else
+	{
+		delete this;
+	}
 }
 
 void taskView::stopProcess()

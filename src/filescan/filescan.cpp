@@ -54,7 +54,7 @@ quint64 Filescan::getFilesOfDir_recursion(const QString &path)
 	QFileInfo str_info(path);
 	quint64 sizex = 0;
 
-	if (!disk_info.isValid())
+	if (!disk_info.isReady())
 	{
 		errored = true;
 		return 0;

@@ -115,7 +115,7 @@ void MainWindow::on_pushButton_ok_clicked()
 {
 	scan_prc->show();
 	foreach (ShowDrives *obj, view_list) {
-		if (obj->isSelected())
+		if (obj->isSelected() && obj->object.isReady())
 		{
 			scan_prc->addTask(obj->object);
 		}
@@ -125,4 +125,5 @@ void MainWindow::on_pushButton_ok_clicked()
 void MainWindow::on_pushButton_showTasks_clicked()
 {
 	scan_prc->show();
+	scan_prc->setFocus();
 }

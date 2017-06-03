@@ -43,7 +43,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>Начинаем...</string>
            </property>
            <property name="wordWrap">
             <bool>false</bool>

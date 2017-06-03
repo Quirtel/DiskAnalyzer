@@ -34,7 +34,6 @@ DiskView::DiskView(QStorageInfo info,Filescan *scan_res, QWidget *parent) :
 
 }
 
-
 void DiskView::closeEvent(QCloseEvent *event)
 {
 	event->accept();
@@ -286,7 +285,7 @@ void DiskView::on_tableWidget_files_cellClicked(int row, int column)
 	}
 
 	QT_CHARTS_USE_NAMESPACE
-	series_files = new QPieSeries();
+	series_files = new QPieSeries(this);
 	series_files->setHoleSize(0.35);
 	slice_files = series_files->append(file.fileName(), ((storage.bytesTotal()-storage.bytesFree()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
 	slice_files->setExploded();
@@ -294,13 +293,13 @@ void DiskView::on_tableWidget_files_cellClicked(int row, int column)
 	series_files->append("Использовано", ((storage.bytesTotal()-storage.bytesFree()-file.size())/1000000));
 	series_files->append("Свободно",((storage.bytesTotal()-file.size()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
 
-	chartView_files = new QChartView();
+	chartView_files = new QChartView(this);
 	chartView_files->setRenderHint(QPainter::Antialiasing);
 	chartView_files->chart()->addSeries(series_files);
 	chartView_files->chart()->legend()->setAlignment(Qt::AlignBottom);
 	chartView_files->chart()->legend()->setFont(QFont("Arial",10));
 
-	vbox_files = new QVBoxLayout;
+	vbox_files = new QVBoxLayout();
 	vbox_files->addWidget(chartView_files);
 	ui->groupBox_inFile->setLayout(vbox_files);
 }
@@ -328,7 +327,7 @@ void DiskView::on_tableWidget_dirs_cellClicked(int row, int column)
 	}
 
 	QT_CHARTS_USE_NAMESPACE
-	series_folders = new QPieSeries();
+	series_folders = new QPieSeries(this);
 	series_folders->setHoleSize(0.35);
 	slice_folders = series_folders->append(dir->getDirectoryPath(),
 	                                       ((disk_info.bytesTotal()-disk_info.bytesFree()-
@@ -339,13 +338,13 @@ void DiskView::on_tableWidget_dirs_cellClicked(int row, int column)
 	series_folders->append("Свободно",((disk_info.bytesTotal()-dir->getDirectorySize()-
 	                                    (disk_info.bytesTotal()-disk_info.bytesFree()-dir->getDirectorySize()))/1000000));
 
-	chartView_folders = new QChartView();
+	chartView_folders = new QChartView(this);
 	chartView_folders->setRenderHint(QPainter::Antialiasing);
 	chartView_folders->chart()->addSeries(series_folders);
 	chartView_folders->chart()->legend()->setAlignment(Qt::AlignBottom);
 	chartView_folders->chart()->legend()->setFont(QFont("Arial",10));
 
-	vbox_folders = new QVBoxLayout;
+	vbox_folders = new QVBoxLayout();
 	vbox_folders->addWidget(chartView_folders);
 	ui->groupBox_inDir->setLayout(vbox_folders);
 }

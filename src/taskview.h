@@ -33,6 +33,7 @@ public slots:
 	void stopProcess();
 	void updateInfo(QString);
 	void workFinished();
+	void workFailed();
 
 private slots:
 	void on_pushButton_cancel_clicked();
@@ -44,6 +45,7 @@ private:
 	QThread *thr;
 	Filescan *scan_adapter; //объект, который будет производить сканирование
 	bool isReady;
+	bool errored;
 	DiskView *view;
 
 	Ui::taskView *ui;
