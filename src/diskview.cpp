@@ -1,5 +1,5 @@
 #include "diskview.h"
-#include "ui_diskview.h"
+#include "../ui/ui_diskview.h"
 #include "filescan/dirinfo.h"
 #include "filescan/filescan.h"
 #include <QTableWidgetItem>

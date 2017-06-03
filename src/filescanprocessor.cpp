@@ -1,5 +1,5 @@
 #include "filescanprocessor.h"
-#include "ui_filescanprocessor.h"
+#include "../ui/ui_filescanprocessor.h"
 #include "taskview.h"
 #include <QList>
 #include <QStorageInfo>

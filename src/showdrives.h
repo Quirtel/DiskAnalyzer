@@ -20,6 +20,7 @@ public:
 	QStorageInfo object;
 	void check(bool c);
 	bool isSelected() const;
+	QString getRWlabel();
 
     ~ShowDrives();
 

@@ -1,5 +1,5 @@
 #include "showdrives.h"
-#include "ui_showdrives.h"
+#include "../ui/ui_showdrives.h"
 #include <QDir>
 #include <QDebug>
 #include <QString>
@@ -90,4 +90,9 @@ bool ShowDrives::isSelected() const
 
 void ShowDrives::on_checkBox_clicked()
 {
+}
+
+QString ShowDrives::getRWlabel()
+{
+	return ui->label_readWriteAcc->text();
 }

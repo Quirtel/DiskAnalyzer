@@ -20,6 +20,8 @@ public:
 	~MainWindow();
 	void refreshVolumes();
 	void detectVolsAmount();
+	int getRecordCount() const;
+	QList<ShowDrives*> getDiskRecords();
 
 private slots:
 	void on_pushButton_selectAll_clicked();

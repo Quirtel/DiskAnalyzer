@@ -1,5 +1,5 @@
 #include "taskview.h"
-#include "ui_taskview.h"
+#include "../ui/ui_taskview.h"
 #include "filescan/filescan.h"
 #include "filescan/dirinfo.h"
 #include <QStorageInfo>

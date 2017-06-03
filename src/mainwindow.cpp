@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "../ui/ui_mainwindow.h"
 #include <QListWidgetItem>
 #include <QStorageInfo>
 #include <QDebug>
@@ -60,14 +60,17 @@ void MainWindow::refreshVolumes()
 
 	foreach (QStorageInfo storage, QStorageInfo::mountedVolumes()) // для каждого элемента информации о диске
 	{
-		ShowDrives *wnd = new ShowDrives(storage, this); // создаем виджет
-		view_list.push_back(wnd); // заносим его в список, чтобы контролировать
-		overall_memory += (storage.bytesTotal() - storage.bytesFree());
+		if (storage.fileSystemType() != "tmpfs" || storage.bytesTotal() != 0)
+		{
+			ShowDrives *wnd = new ShowDrives(storage, this); // создаем виджет
+			view_list.push_back(wnd); // заносим его в список, чтобы контролировать
+			overall_memory += (storage.bytesTotal() - storage.bytesFree());
 
-		QListWidgetItem *item = new QListWidgetItem(); // создаем контейнер под запись
-		ui->listWidget->addItem(item);
-		item->setSizeHint(QSize(50,120));
-		ui->listWidget->setItemWidget(item, wnd); // присваиваем виджет контейнеру
+			QListWidgetItem *item = new QListWidgetItem(); // создаем контейнер под запись
+			ui->listWidget->addItem(item);
+			item->setSizeHint(QSize(50,120));
+			ui->listWidget->setItemWidget(item, wnd); // присваиваем виджет контейнеру
+		}
 	}
 
 	detectVolsAmount();
@@ -126,4 +129,14 @@ void MainWindow::on_pushButton_showTasks_clicked()
 {
 	scan_prc->show();
 	scan_prc->setFocus();
+}
+
+int MainWindow::getRecordCount() const
+{
+	return ui->listWidget->count();
+}
+
+QList<ShowDrives*> MainWindow::getDiskRecords()
+{
+	return view_list;
 }
