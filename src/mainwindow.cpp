@@ -21,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->refreshVolumes();
 	this->detectVolsAmount();
-
 }
 
 MainWindow::~MainWindow()
@@ -121,4 +120,9 @@ void MainWindow::on_pushButton_ok_clicked()
 			scan_prc->addTask(obj->object);
 		}
 	}
+}
+
+void MainWindow::on_pushButton_showTasks_clicked()
+{
+	scan_prc->show();
 }

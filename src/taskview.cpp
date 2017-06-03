@@ -26,7 +26,7 @@ taskView::taskView(QStorageInfo storage, QWidget *parent) : QWidget(parent), sto
 
 	ui->progressBar->setMaximum(convertFromBytes(storage_info.bytesTotal() - storage_info.bytesFree()));
 
-	scan_adapter = new Filescan(storage.rootPath());
+	scan_adapter = new Filescan(storage);
 	connect(scan_adapter, SIGNAL(currentFileScan(QString)), this, SLOT(updateInfo(QString)));
 
 	connect(scan_adapter, &Filescan::bytesRead, this, [&](quint64 b)

@@ -148,6 +148,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButton_showTasks">
+        <property name="text">
+         <string>Активные задачи</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton_selectAll">
         <property name="text">
          <string>Выбрать всё</string>

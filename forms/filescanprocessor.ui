@@ -23,7 +23,7 @@
          <widget class="QLabel" name="label_2">
           <property name="font">
            <font>
-            <pointsize>12</pointsize>
+            <pointsize>15</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -36,13 +36,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>TextLabel:</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -52,13 +45,6 @@
 {
 	border: 5px solid black;
 }</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>TextLabel</string>
         </property>
        </widget>
       </item>

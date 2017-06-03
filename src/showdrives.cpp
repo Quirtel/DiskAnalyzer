@@ -15,6 +15,7 @@ ShowDrives::ShowDrives(QStorageInfo info, QWidget *parent) :
 	if (object.name() == "")
 	{
 		ui->label->setText(object.device()); // если у устройства нет имени, то прописываем точку монтирования
+		ui->label1->hide();
 	}
 	else
 	{

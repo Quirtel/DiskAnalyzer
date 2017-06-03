@@ -30,6 +30,8 @@ private slots:
 
 	void on_pushButton_ok_clicked();
 
+	void on_pushButton_showTasks_clicked();
+
 signals:
 	void checkAll();
 	void uncheckAll();

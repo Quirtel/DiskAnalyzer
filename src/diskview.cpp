@@ -24,9 +24,13 @@ DiskView::DiskView(QStorageInfo info,Filescan *scan_res, QWidget *parent) :
 	filesListInit();
 	foldersListInit(disk_info.rootPath());
 
-    series = nullptr;
-    chartView = nullptr;
-    vbox = nullptr;
+	series_files = nullptr;
+	chartView_files = nullptr;
+	vbox_files = nullptr;
+
+	series_folders = nullptr;
+	chartView_folders = nullptr;
+	vbox_folders = nullptr;
 
 }
 
@@ -54,7 +58,7 @@ void DiskView::on_tableWidget_files_cellDoubleClicked(int row, int column)
 void DiskView::filesListInit() // добавление списка файлов в таблицу
 {
 
-    ui->tableWidget_files->setColumnCount(2);
+	ui->tableWidget_files->setColumnCount(2);
 	ui->tableWidget_files->setHorizontalHeaderItem(0, new QTableWidgetItem("Название")); // добавляем столбец
 	ui->tableWidget_files->setHorizontalHeaderItem(1, new QTableWidgetItem("Размер")); // и здесь тоже
 
@@ -134,7 +138,7 @@ void DiskView::foldersListInit(const QString &entry_directory)
 				QTableWidgetItem *item_size = new QTableWidgetItem();
 				item_size->setData(Qt::DisplayRole,QString::number(
 				                       taskView::convertFromBytes(scanAdapter->getDirsMap().value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()),'f',2)
-				                       + ' ' + taskView::getUnit(scanAdapter->getDirsMap().value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()));
+				                   + ' ' + taskView::getUnit(scanAdapter->getDirsMap().value(list_of_dirs.at(i).absoluteFilePath())->getDirectorySize()));
 
 
 				ui->tableWidget_dirs->setItem(i, 0, item_dirname);
@@ -220,7 +224,7 @@ void DiskView::addItemToListOfFolders(int index) // а эта функция п�
 				QTableWidgetItem *item_size = new QTableWidgetItem();
 				item_size->setData(Qt::DisplayRole,QString::number(
 				                       taskView::convertFromBytes(scanAdapter->getDirsMap().value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()),'f',2)
-				                       + ' ' + taskView::getUnit(scanAdapter->getDirsMap().value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()));
+				                   + ' ' + taskView::getUnit(scanAdapter->getDirsMap().value(list_of_dirs.at(maximum_item_index + i + 1).absoluteFilePath())->getDirectorySize()));
 
 				ui->tableWidget_dirs->setItem(maximum_item_index + i + 1, 0, item_dirname);
 				ui->tableWidget_dirs->setItem(maximum_item_index + i + 1, 1, item_size);
@@ -235,20 +239,20 @@ void DiskView::addItemToListOfFolders(int index) // а эта функция п�
 
 void DiskView::on_tableWidget_dirs_cellDoubleClicked(int row, int column)
 {
-    QDir dir(ui->tableWidget_dirs->item(row, 0)->whatsThis());
-    dir.setFilter(QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot | QDir::Hidden);
-    QList<QFileInfo> list_next = dir.entryInfoList();
-    if (!list_next.isEmpty())
-    {
-        foldersListInit(ui->tableWidget_dirs->item(row, 0)->whatsThis());
-    }
-    else
-    {
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setText("Эта папка не содержит поддиректорий");
-        msgBox.exec();
-    }
+	QDir dir(ui->tableWidget_dirs->item(row, 0)->whatsThis());
+	dir.setFilter(QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot | QDir::Hidden);
+	QList<QFileInfo> list_next = dir.entryInfoList();
+	if (!list_next.isEmpty())
+	{
+		foldersListInit(ui->tableWidget_dirs->item(row, 0)->whatsThis());
+	}
+	else
+	{
+		QMessageBox msgBox;
+		msgBox.setIcon(QMessageBox::Warning);
+		msgBox.setText("Эта папка не содержит поддиректорий");
+		msgBox.exec();
+	}
 }
 
 void DiskView::on_pushButton_levelUp_clicked()
@@ -260,45 +264,88 @@ void DiskView::on_pushButton_levelUp_clicked()
 
 void DiskView::on_tableWidget_files_cellClicked(int row, int column)
 {
-   QFileInfo file(ui->tableWidget_files->item(row,0)->whatsThis());
-   QStorageInfo storage = QStorageInfo::root();
+	QFileInfo file(ui->tableWidget_files->item(row,0)->whatsThis());
+	QStorageInfo storage = disk_info;
 
-   if (vbox != nullptr)
-   {
-   delete vbox;
-   vbox = nullptr;
-   }
+	if (vbox_files != nullptr)
+	{
+		delete vbox_files;
+		vbox_files = nullptr;
+	}
 
-   if (chartView != nullptr)
-   {
-   delete chartView;
-   chartView = nullptr;
-   }
+	if (chartView_files != nullptr)
+	{
+		delete chartView_files;
+		chartView_files = nullptr;
+	}
 
-   if (series != nullptr)
-   {
-   delete series;
-   series = nullptr;
-   }
+	if (series_files != nullptr)
+	{
+		delete series_files;
+		series_files = nullptr;
+	}
 
+	QT_CHARTS_USE_NAMESPACE
+	series_files = new QPieSeries();
+	series_files->setHoleSize(0.35);
+	slice_files = series_files->append(file.fileName(), ((storage.bytesTotal()-storage.bytesFree()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
+	slice_files->setExploded();
+	slice_files->setLabelVisible();
+	series_files->append("Использовано", ((storage.bytesTotal()-storage.bytesFree()-file.size())/1000000));
+	series_files->append("Свободно",((storage.bytesTotal()-file.size()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
 
+	chartView_files = new QChartView();
+	chartView_files->setRenderHint(QPainter::Antialiasing);
+	chartView_files->chart()->addSeries(series_files);
+	chartView_files->chart()->legend()->setAlignment(Qt::AlignBottom);
+	chartView_files->chart()->legend()->setFont(QFont("Arial",10));
 
-   QT_CHARTS_USE_NAMESPACE
-   series = new QPieSeries();
-   slice = series->append(file.fileName(), ((storage.bytesTotal()-storage.bytesFree()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
-   slice->setExploded();
-   slice->setLabelVisible();
-   series->append("usage", ((storage.bytesTotal()-storage.bytesFree()-file.size())/1000000));
-   series->append("free",((storage.bytesTotal()-file.size()-(storage.bytesTotal()-storage.bytesFree()-file.size()))/1000000));
+	vbox_files = new QVBoxLayout;
+	vbox_files->addWidget(chartView_files);
+	ui->groupBox_inFile->setLayout(vbox_files);
+}
 
-   chartView = new QChartView();
-   chartView -> setRenderHint(QPainter::Antialiasing);
-   chartView->chart()->addSeries(series);
-   chartView->chart()->legend()->setAlignment(Qt::AlignBottom);
-   chartView->chart()->legend()->setFont(QFont("Arial",10));
+void DiskView::on_tableWidget_dirs_cellClicked(int row, int column)
+{
+	DirInfo *dir = scanAdapter->getDirByPath(ui->tableWidget_dirs->item(row,0)->whatsThis());
 
-   vbox = new QVBoxLayout;
-   vbox->addWidget(chartView);
-   ui->groupBox_inFolder->setLayout(vbox);
+	if (vbox_folders != nullptr)
+	{
+		delete vbox_folders;
+		vbox_folders = nullptr;
+	}
 
+	if (chartView_folders != nullptr)
+	{
+		delete chartView_folders;
+		chartView_folders = nullptr;
+	}
+
+	if (series_folders != nullptr)
+	{
+		delete series_folders;
+		series_folders = nullptr;
+	}
+
+	QT_CHARTS_USE_NAMESPACE
+	series_folders = new QPieSeries();
+	series_folders->setHoleSize(0.35);
+	slice_folders = series_folders->append(dir->getDirectoryPath(),
+	                                       ((disk_info.bytesTotal()-disk_info.bytesFree()-
+	                                         (disk_info.bytesTotal()-disk_info.bytesFree()-dir->getDirectorySize()))/1000000));
+	slice_folders->setExploded();
+	slice_folders->setLabelVisible();
+	series_folders->append("Использовано", ((disk_info.bytesTotal()-disk_info.bytesFree()-dir->getDirectorySize())/1000000));
+	series_folders->append("Свободно",((disk_info.bytesTotal()-dir->getDirectorySize()-
+	                                    (disk_info.bytesTotal()-disk_info.bytesFree()-dir->getDirectorySize()))/1000000));
+
+	chartView_folders = new QChartView();
+	chartView_folders->setRenderHint(QPainter::Antialiasing);
+	chartView_folders->chart()->addSeries(series_folders);
+	chartView_folders->chart()->legend()->setAlignment(Qt::AlignBottom);
+	chartView_folders->chart()->legend()->setFont(QFont("Arial",10));
+
+	vbox_folders = new QVBoxLayout;
+	vbox_folders->addWidget(chartView_folders);
+	ui->groupBox_inDir->setLayout(vbox_folders);
 }

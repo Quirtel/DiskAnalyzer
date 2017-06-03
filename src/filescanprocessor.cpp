@@ -18,11 +18,11 @@ FileScanProcessor::~FileScanProcessor()
 	delete ui;
 }
 
-void FileScanProcessor::closeEvent(QCloseEvent *event)
-{
-	emit stopTasks();
-	event->accept();
-}
+//void FileScanProcessor::closeEvent(QCloseEvent *event)
+//{
+//	emit stopTasks();
+//	event->accept();
+//}
 
 void FileScanProcessor::addTask(QStorageInfo info)
 {

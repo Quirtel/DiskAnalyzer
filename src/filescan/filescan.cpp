@@ -8,8 +8,9 @@
 #include <QMimeDatabase>
 #include <QThread>
 
-Filescan::Filescan(const QString &entryDir) : dir_address(entryDir)
+Filescan::Filescan(QStorageInfo DI) : disk_info(DI)
 {
+	dir_address = DI.rootPath();
 	root = new DirInfo(dir_address);
 	dirs_map.insert(dir_address, root);
 	signal_stop = false;
@@ -36,10 +37,15 @@ void Filescan::sendStop()
 void Filescan::startAnalyse()
 {
 	root->setDirectorySize(getFilesOfDir_recursion(dir_address));
-	std::sort(all_files.begin(), all_files.end(), [&](QFileInfo a1, QFileInfo a2)
+	if (!signal_stop)
 	{
-		return a1.size() > a2.size();
-	});
+		std::sort(all_files.begin(), all_files.end(), [&](QFileInfo a1, QFileInfo a2)
+		{
+			return a1.size() > a2.size();
+		});
+	}
+	if (errored) emit errorOccured();
+
 	this->thread()->quit();
 }
 
@@ -47,7 +53,15 @@ quint64 Filescan::getFilesOfDir_recursion(const QString &path)
 {
 	QFileInfo str_info(path);
 	quint64 sizex = 0;
+
+	if (!disk_info.isValid())
+	{
+		errored = true;
+		return 0;
+	}
+
 	if (signal_stop) return 0;
+
 
 	if (str_info.isDir())
 	{
@@ -90,8 +104,10 @@ QMap <QString, DirInfo *> Filescan::getDirsMap() const
 	return this->dirs_map;
 }
 
-
-
+DirInfo* Filescan::getDirByPath(const QString &path)
+{
+	return dirs_map.value(path);
+}
 
 
 

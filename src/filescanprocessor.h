@@ -23,7 +23,7 @@ public:
 private:
 	Ui::FileScanProcessor *ui;
 	QList<QStorageInfo> list_of_devices;
-	void closeEvent(QCloseEvent *event);
+	//void closeEvent(QCloseEvent *event);
 	QList <taskView *> taskList;
 
 signals:

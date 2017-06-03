@@ -1,8 +1,5 @@
 #include "mainwindow.h"
-#include "showdrives.h"
 #include <QApplication>
-
-
 
 int main(int argc, char *argv[])
 {

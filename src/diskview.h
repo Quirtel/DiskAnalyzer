@@ -36,6 +36,8 @@ private slots:
 
     void on_tableWidget_files_cellClicked(int row, int column);
 
+	void on_tableWidget_dirs_cellClicked(int row, int column);
+
 private:
 	Ui::DiskView *ui;
 	Filescan *scanAdapter;
@@ -46,13 +48,15 @@ private:
 	QStorageInfo disk_info;
 	QString current_directory;
 	QList<QFileInfo> list_of_dirs;
-    QStorageInfo storage;
     QFileInfo file;
-    QtCharts::QPieSeries *series;
-    QtCharts::QChartView *chartView;
-    QVBoxLayout *vbox;
-    QtCharts::QPieSlice *slice;
-
+	QtCharts::QPieSeries *series_files;
+	QtCharts::QChartView *chartView_files;
+	QVBoxLayout *vbox_files;
+	QtCharts::QPieSlice *slice_files;
+	QtCharts::QPieSeries *series_folders;
+	QtCharts::QChartView *chartView_folders;
+	QVBoxLayout *vbox_folders;
+	QtCharts::QPieSlice *slice_folders;
 
 };
 
